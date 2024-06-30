@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
+    "fastify-plugin": "^4.5.1",
     "ts-node": "^10.9.2",
     "winston": "^3.13.0"
   },
