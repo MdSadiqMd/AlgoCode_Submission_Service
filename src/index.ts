@@ -2,8 +2,10 @@ import fastify from 'fastify';
 
 import config from './config/server.config';
 import logger from './config/logger.config';
+import app from './app';
 
 const server = fastify();
+server.register(app);
 server.listen({ port: Number(config.PORT) }, (error: Error | null) => {
     if (error) {
         logger.error(error);
