@@ -17,8 +17,14 @@ export async function pingRequest(this: any, req: FastifyRequest, res: FastifyRe
 export async function createSubmission(this: any, req: FastifyRequest, res: FastifyReply) {
     try {
         const response = await this.submissionService.addSubmission(req.body);
+        return res.status(StatusCodes.CREATED).send({
+            error: {},
+            data: response,
+            sucess: true,
+            message: 'Submission Created'
+        });
     } catch (error) {
-        logger.error(`Error in create Submission Request: ${error}`);
+        logger.error(`Error in creating Submission: ${error}`);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: 'Internal Server Error' });
     }
 }
