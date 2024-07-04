@@ -11,10 +11,10 @@ import apiRoutes from './routes/api/api.routes';
  * @param options - Plugin options
  */
 async function app(fastify: FastifyInstance, options: FastifyPluginOptions) {
-    fastify.register(require('@fastify/cors'));
-    fastify.register(repositoryPlugin);
-    fastify.register(serverPluginService);
-    fastify.register(apiRoutes, { prefix: '/api' });
+    await fastify.register(require('@fastify/cors'));
+    await fastify.register(repositoryPlugin);
+    await fastify.register(serverPluginService);
+    await fastify.register(apiRoutes, { prefix: '/api' });
 }
 
 export default fastifyPlugin(app);

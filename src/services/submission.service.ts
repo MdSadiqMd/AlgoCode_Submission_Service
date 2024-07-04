@@ -15,7 +15,7 @@ class SubmissionService {
 
     async addSubmission(submissionObject: any) {
         try {
-            const submission = this.submissionRepository.createSubmission(submissionObject);
+            const submission = await this.submissionRepository.createSubmission(submissionObject);
             if (!submission) {
                 logger.error(`Error creating submission Object in submission Service`);
             }
