@@ -1,9 +1,7 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 
-import testRoutes from './test/test.routes';
-
-async function v1Routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
-    fastify.register(testRoutes, { prefix: '/test' });
+async function v1Plugin(fastify: FastifyInstance, options: FastifyPluginOptions) {
+    fastify.register(require('./submission.routes'), { prefix: '/submission' });
 }
 
-export default v1Routes;
+export default v1Plugin;

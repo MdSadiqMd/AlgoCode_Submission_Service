@@ -1,10 +1,10 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import fastifyPlugin from 'fastify-plugin';
 
-import TestService from './test.service';
+import SubmissionService from './submission.service';
 
 async function servicePlugin(fastify: FastifyInstance, options: FastifyPluginOptions) {
-    fastify.decorate('testService', new TestService());
+    fastify.decorate('submissionService', new SubmissionService());
 }
 
 export default fastifyPlugin(servicePlugin);

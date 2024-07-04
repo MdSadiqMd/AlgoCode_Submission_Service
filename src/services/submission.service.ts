@@ -1,4 +1,4 @@
-class TestService {
+class SubmissionService {
     constructor() {
         // inject here
     }
@@ -6,6 +6,10 @@ class TestService {
     async pingCheck(): Promise<string> {
         return 'pong';
     }
+
+    async addSubmission(submission: any) {
+
+    }
 }
 
-export default TestService;
+export default SubmissionService;
