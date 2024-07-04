@@ -7,14 +7,14 @@ import connectToDB from './config/db.config';
 
 const server = fastify({ logger: true });
 server.register(app);
-server.listen({ port: Number(config.PORT) }, (error: Error | null) => {
+server.listen({ port: Number(config.PORT) }, async (error: Error | null) => {
     if (error) {
         logger.error(`Error Connecting to Port: ${error}`);
         process.exit(1);
     }
     console.log(`Server up at port ${config.PORT}`);
     try {
-        connectToDB();
+        await connectToDB();
         logger.info(`Connected to DB`);
     } catch (error) {
         logger.error(`Error Connecting to DB: ${error}`);
