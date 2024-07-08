@@ -1,6 +1,7 @@
 import SubmissionProducer from "../producers/submission.producer";
 import SubmissionRepository from "../repositories/submission.repository";
 import logger from "../config/logger.config";
+import fetchProblemDetails from "../apis/problemAdmin.api";
 
 class SubmissionService {
     private submissionRepository: SubmissionRepository;
@@ -13,14 +14,38 @@ class SubmissionService {
         return 'pong';
     }
 
-    async addSubmission(submissionObject: any) {
+    async addSubmission(submissionPayload: any): Promise<any> {
         try {
-            const submission = await this.submissionRepository.createSubmission(submissionObject);
+            const problemId = submissionPayload.problemId;
+            const problemAdminApiResponse = await fetchProblemDetails(problemId);
+            if (!problemAdminApiResponse) {
+                throw new Error(`Failed to fetch problem details from the API`);
+            }
+
+            const languageCodeStub = problemAdminApiResponse.data.codeStubs.find(
+                (codeStub: { language: string; }) => codeStub.language.toLowerCase() === submissionPayload.language.toLowerCase()
+            );
+            if (!languageCodeStub) {
+                throw new Error(`No code stub found for the language: ${submissionPayload.language}`);
+            }
+            logger.info(`Language Code Stub: ${languageCodeStub}`);
+
+            submissionPayload.code = `${languageCodeStub.startSnippet}\n\n${submissionPayload.code}\n\n${languageCodeStub.endSnippet}`;
+            const submission = await this.submissionRepository.createSubmission(submissionPayload);
+
             if (!submission) {
-                logger.error(`Error creating submission Object in submission Service`);
+                throw new Error(`Failed to create a submission in the repository`);
             }
             logger.info(`Submission: ${submission}`);
-            const response = await SubmissionProducer(submissionObject);
+
+            const response = await SubmissionProducer({
+                [submission._id as unknown as string]: {
+                    code: submission.code,
+                    language: submission.language,
+                    inputCase: problemAdminApiResponse.data.testCases[0].input,
+                    outputCase: problemAdminApiResponse.data.testCases[0].output,
+                }
+            });
             return { queueResponse: response, submission };
         } catch (error) {
             logger.error(`Error in creating Submission in Service: ${error}`);
