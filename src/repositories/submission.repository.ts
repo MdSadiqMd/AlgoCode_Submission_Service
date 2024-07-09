@@ -1,5 +1,4 @@
 import Submission from "../models/submission.model";
-import { createSubmission } from "../controllers/submission.contoller";
 
 class SubmissionRepository {
     private submissionModel: typeof Submission;
