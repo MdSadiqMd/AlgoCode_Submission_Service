@@ -1,9 +1,10 @@
 import fastify from 'fastify';
 
+import app from './app';
 import config from './config/server.config';
 import logger from './config/logger.config';
-import app from './app';
 import connectToDB from './config/db.config';
+import evaluationWorker from './workers/evaluation.worker';
 
 const server = fastify({ logger: true });
 server.register(app);
@@ -16,7 +17,11 @@ server.listen({ port: Number(config.PORT) }, async (error: Error | null) => {
     try {
         await connectToDB();
         logger.info(`Connected to DB`);
-    } catch (error) {
-        logger.error(`Error Connecting to DB: ${error}`);
+
+        evaluationWorker('EvaluationQueue');
+        logger.info(`Evaluation Queue Init`);
+    } catch (error: any) {
+        logger.error(`Initialization Error: ${error}`);
+        process.exit(1);
     }
 });

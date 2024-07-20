@@ -17,6 +17,7 @@ class SubmissionService {
     async addSubmission(submissionPayload: any): Promise<any> {
         try {
             const problemId = submissionPayload.problemId;
+            const userId = submissionPayload.userId;
             const problemAdminApiResponse = await fetchProblemDetails(problemId);
             if (!problemAdminApiResponse) {
                 throw new Error(`Failed to fetch problem details from the API`);
@@ -40,6 +41,8 @@ class SubmissionService {
 
             const response = await SubmissionProducer({
                 [submission._id as unknown as string]: {
+                    userId,
+                    submissionId: submission._id,
                     code: submission.code,
                     language: submission.language,
                     inputCase: problemAdminApiResponse.data.testCases[0].input,
