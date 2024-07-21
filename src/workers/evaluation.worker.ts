@@ -13,7 +13,7 @@ function evaluationWorker(queueName: string) {
                 try {
                     const response = await axios.post(config.SOCKET_SERVICE_URL, {
                         userId: job.data.userId,
-                        payload: job.data.response
+                        payload: job.data
                     }, { timeout: 10000 });
                     logger.info(`Payload sent to Socket Service: ${JSON.stringify(response)}`);
                 } catch (error: any) {
