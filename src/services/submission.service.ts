@@ -1,4 +1,3 @@
-import { parse, stringify } from 'flatted';
 import SubmissionProducer from "../producers/submission.producer";
 import SubmissionRepository from "../repositories/submission.repository";
 import logger from "../config/logger.config";
@@ -20,7 +19,7 @@ class SubmissionService {
             const problemId = submissionPayload.problemId;
             const userId = submissionPayload.userId;
             const problemAdminApiResponse = await fetchProblemDetails(problemId);
-            logger.info(`Problem Admin API Response: ${stringify(problemAdminApiResponse)}`);
+            logger.info(`\n Problem Admin API Response: ${problemAdminApiResponse}`);
 
             if (!problemAdminApiResponse || !problemAdminApiResponse.data) {
                 throw new Error(`Failed to fetch problem details from the API`);
@@ -41,7 +40,6 @@ class SubmissionService {
 
             submissionPayload.code = `${languageCodeStub.startSnippet}\n\n${submissionPayload.code}\n\n${languageCodeStub.endSnippet}`;
             const submission = await this.submissionRepository.createSubmission(submissionPayload);
-
             if (!submission) {
                 throw new Error(`Failed to create a submission in the repository`);
             }
