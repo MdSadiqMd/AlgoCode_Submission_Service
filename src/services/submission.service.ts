@@ -1,3 +1,4 @@
+import { parse, stringify } from 'flatted';
 import SubmissionProducer from "../producers/submission.producer";
 import SubmissionRepository from "../repositories/submission.repository";
 import logger from "../config/logger.config";
@@ -19,11 +20,18 @@ class SubmissionService {
             const problemId = submissionPayload.problemId;
             const userId = submissionPayload.userId;
             const problemAdminApiResponse = await fetchProblemDetails(problemId);
-            if (!problemAdminApiResponse) {
+            logger.info(`Problem Admin API Response: ${stringify(problemAdminApiResponse)}`);
+
+            if (!problemAdminApiResponse || !problemAdminApiResponse.data) {
                 throw new Error(`Failed to fetch problem details from the API`);
             }
 
-            const languageCodeStub = problemAdminApiResponse.data.codeStubs.find(
+            const codeStubs = problemAdminApiResponse.data.codeStubs;
+            if (!codeStubs) {
+                throw new Error(`No code stubs found in the API response`);
+            }
+
+            const languageCodeStub = codeStubs.find(
                 (codeStub: { language: string; }) => codeStub.language.toLowerCase() === submissionPayload.language.toLowerCase()
             );
             if (!languageCodeStub) {
