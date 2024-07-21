@@ -19,13 +19,13 @@ class SubmissionService {
             const problemId = submissionPayload.problemId;
             const userId = submissionPayload.userId;
             const problemAdminApiResponse = await fetchProblemDetails(problemId);
-            logger.info(`\n Problem Admin API Response: ${problemAdminApiResponse}`);
+            logger.info(`Problem Admin API Response: ${problemAdminApiResponse}`);
 
             if (!problemAdminApiResponse || !problemAdminApiResponse.data) {
                 throw new Error(`Failed to fetch problem details from the API`);
             }
 
-            const codeStubs = problemAdminApiResponse.data.codeStubs;
+            const codeStubs = problemAdminApiResponse.data.data.codeStubs;
             if (!codeStubs) {
                 throw new Error(`No code stubs found in the API response`);
             }
@@ -45,14 +45,18 @@ class SubmissionService {
             }
             logger.info(`Submission: ${submission}`);
 
+            if (!problemAdminApiResponse.data.data.testCases || problemAdminApiResponse.data.data.testCases.length === 0) {
+                throw new Error(`No test cases found in the API response`);
+            }
+
             const response = await SubmissionProducer({
                 [submission._id as unknown as string]: {
                     userId,
                     submissionId: submission._id,
                     code: submission.code,
                     language: submission.language,
-                    inputCase: problemAdminApiResponse.data.testCases[0].input,
-                    outputCase: problemAdminApiResponse.data.testCases[0].output,
+                    inputCase: problemAdminApiResponse.data.data.testCases[0].input,
+                    outputCase: problemAdminApiResponse.data.data.testCases[0].output,
                 }
             });
             return { queueResponse: response, submission };
