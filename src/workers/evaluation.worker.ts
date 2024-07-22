@@ -9,6 +9,9 @@ function evaluationWorker(queueName: string) {
     new Worker(
         queueName,
         async job => {
+            logger.info(`Job is : ${JSON.stringify(job)}`);
+            logger.info(`Job userId : ${JSON.stringify(job.data.userId)}`);
+            logger.info(`Job Data : ${JSON.stringify(job.data)}`);
             if (job.name === 'EvaluationJob') {
                 try {
                     const response = await axios.post(config.SOCKET_SERVICE_URL, {
