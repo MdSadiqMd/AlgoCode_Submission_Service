@@ -20,7 +20,7 @@ function evaluationWorker(queueName: string) {
                     }, { timeout: 10000 });
                     logger.info(`Payload sent to Socket Service: ${JSON.stringify(response)}`);
                 } catch (error: any) {
-                    logger.error(`Error in sending Payload to Socket Service: ${error}`);
+                    logger.error(`Error in sending Payload to Socket Service: ${error.response.data}`);
                 }
             }
         },
