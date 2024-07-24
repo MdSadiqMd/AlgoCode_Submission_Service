@@ -32,7 +32,6 @@ function evaluationWorker(queueName: string) {
             }
         }
     );
-
 }
 
 export default evaluationWorker;
