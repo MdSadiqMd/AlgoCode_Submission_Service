@@ -49,14 +49,22 @@ class SubmissionService {
                 throw new Error(`No test cases found in the API response`);
             }
 
+            const inputCases = problemAdminApiResponse.data.data.testCases.map(
+                (testCase: { input: string }) => testCase.input
+            );
+
+            const outputCases = problemAdminApiResponse.data.data.testCases.map(
+                (testCase: { output: string }) => testCase.output
+            );
+
             const response = await SubmissionProducer({
                 [submission._id as unknown as string]: {
                     userId,
                     submissionId: submission._id,
                     code: submission.code,
                     language: submission.language,
-                    inputCase: problemAdminApiResponse.data.data.testCases[0].input,
-                    outputCase: problemAdminApiResponse.data.data.testCases[0].output,
+                    inputCase: inputCases,
+                    outputCase: outputCases,
                 }
             });
             return { queueResponse: response, submission };
