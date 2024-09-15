@@ -8,7 +8,7 @@ import evaluationWorker from './workers/evaluation.worker';
 
 const server = fastify({ logger: true });
 server.register(app);
-server.listen({ port: Number(config.PORT) }, async (error: Error | null) => {
+server.listen({ port: Number(config.PORT), host: '0.0.0.0' }, async (error: Error | null) => {
     if (error) {
         logger.error(`Error Connecting to Port: ${error}`);
         process.exit(1);
